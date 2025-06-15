@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>How to Kill: Step by Step</title>
+  <style>
+    body {
+  background-color: #000;
+  color: #00ff88;
+  font-family: 'Courier New', monospace;
+  padding: 5vw;
+  font-size: 3.5vw;
+  max-width: 800px;
+  margin: auto;
+  box-sizing: border-box;
+}
+
+    .line {
+      white-space: pre-wrap;
+      margin-bottom: 8px;
+    }
+
+    #terminal::after {
+      content: "_";
+      animation: blink 1s steps(2, start) infinite;
+    }
+
+    @media (min-width: 600px) {
+  body {
+    font-size: 1.1rem;
+    padding: 40px;
+  }
+}
+
+
+    @keyframes blink {
+      to { visibility: hidden; }
+    }
+
+    #inputBox {
+      margin-top: 10px;
+      font-family: inherit;
+      background: #000;
+      color: #00ff88;
+      border: none;
+      border-bottom: 1px solid #00ff88;
+      font-size: 1.1rem;
+      outline: none;
+      width: 50%;
+      min-width: 80px;
+    }
+  </style>
+</head>
+<body>
+  <div id="terminal"></div>
+  <input type="text" id="inputBox" style="display: none;" placeholder="1 or 2" maxlength="1"/>
+
+  <script>
+    const terminal = document.getElementById("terminal");
+    const inputBox = document.getElementById("inputBox");
+
+    const lines = [
+      "HOW TO KILL: Step by Step",
+      "Disclaimer: For entertainment only. FBI chill.",
+      "",
+      "Step 1: Locate target",
+      ">> Scanning nearby cuties",
+      ">> Target locked: Helen",
+      "",
+      "Step 2: Prepare weapons",
+      ">> Equipping: flirty compliments, good music taste, slightly chaotic energy",
+      "",
+      "Step 3: Execute",
+      ">> ERROR: Can't harm someone with such pretty eyes",
+      "",
+      "Auto-switching to new protocol"
+    ];
+
+    let i = 0;
+
+    function typeLine(text, speed = 35) {
+      return new Promise(resolve => {
+        let j = 0;
+        const interval = setInterval(() => {
+          if (j < text.length) {
+            terminal.innerHTML += text.charAt(j);
+            j++;
+          } else {
+            clearInterval(interval);
+            terminal.innerHTML += "<br/>";
+            resolve();
+          }
+        }, speed);
+      });
+    }
+
+    function loadingSpinnerLine(prefix, duration = 1800) {
+      return new Promise(resolve => {
+        const spinners = ['|', '/', '-', '\\'];
+        let idx = 0;
+        const line = document.createElement('div');
+        line.className = 'line';
+        terminal.appendChild(line);
+
+        const interval = setInterval(() => {
+          line.textContent = prefix + ' ' + spinners[idx % spinners.length];
+          idx++;
+        }, 120);
+
+        setTimeout(() => {
+          clearInterval(interval);
+          line.textContent = prefix + ' ✔️';
+          terminal.innerHTML += "<br/>";
+          resolve();
+        }, duration);
+      });
+    }
+
+    async function run() {
+      while (i < lines.length) {
+        const line = lines[i];
+        if (line.includes("Scanning nearby cuties")) {
+          await loadingSpinnerLine(">> Scanning nearby cuties");
+        } else {
+          await typeLine(line);
+        }
+        i++;
+        await new Promise(r => setTimeout(r, 500));
+      }
+
+      // Ask her
+      await typeLine(">> Are you still angry at me?");
+      await typeLine("1. Yes");
+      await typeLine("2. No");
+
+      inputBox.style.display = "inline-block";
+      inputBox.focus();
+
+      inputBox.addEventListener("keydown", function handler(e) {
+        if (e.key === "Enter") {
+          inputBox.removeEventListener("keydown", handler);
+          const val = inputBox.value.trim();
+          inputBox.style.display = "none";
+          terminal.innerHTML += `>> ${val}<br/>`;
+
+          if (val === "1") {
+            typeLine(">> I’m sowwy 😔🍓 Please forgive this certified baka.");
+          } else if (val === "2") {
+            typeLine(">> Yaayy~ You're the best 🥹");
+          } else {
+            typeLine(">> See?? THAT's why you're baka baka 😤");
+          }
+        }
+      });
+    }
+
+    run();
+  </script>
+</body>
+</html>
